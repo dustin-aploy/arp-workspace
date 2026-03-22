@@ -1,0 +1,427 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arp.dev/schemas/arp.schema.json",
+  "title": "ARP Agent Declaration",
+  "description": "Normative schema for Agent Responsibility Protocol declarations.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "api_version",
+    "metadata",
+    "identity",
+    "scope",
+    "authority",
+    "escalation",
+    "audit",
+    "memory",
+    "budget",
+    "performance"
+  ],
+  "properties": {
+    "kind": {
+      "const": "ARPDeclaration"
+    },
+    "api_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    },
+    "identity": {
+      "$ref": "#/$defs/identity"
+    },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    },
+    "authority": {
+      "$ref": "#/$defs/authority"
+    },
+    "escalation": {
+      "$ref": "#/$defs/escalation"
+    },
+    "audit": {
+      "$ref": "audit.schema.json"
+    },
+    "memory": {
+      "$ref": "#/$defs/memory"
+    },
+    "budget": {
+      "$ref": "#/$defs/budget"
+    },
+    "performance": {
+      "$ref": "#/$defs/performance"
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Implementation-specific extensions. Keys should be namespaced to avoid collisions.",
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9_.-]*:[A-Za-z0-9_.-]+$": true
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["created_at", "last_reviewed_at", "owners"],
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "last_reviewed_at": { "type": "string", "format": "date-time" },
+        "owners": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/contact" }
+        },
+        "approvers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/contact" }
+        },
+        "labels": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "change_ticket": { "type": "string", "minLength": 1 },
+        "organization": { "type": "string", "minLength": 1 }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "email"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "format": "email" },
+        "team": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "slack": { "type": "string", "minLength": 1 }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "role", "owner", "protocol_version", "lifecycle_state"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" },
+        "name": { "type": "string", "minLength": 3 },
+        "role": { "type": "string", "minLength": 3 },
+        "summary": { "type": "string", "minLength": 10 },
+        "owner": { "$ref": "#/$defs/contact" },
+        "protocol_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "lifecycle_state": {
+          "type": "string",
+          "enum": ["proposed", "active", "suspended", "retired"]
+        },
+        "classification": { "type": "string", "minLength": 1 },
+        "review_cycle_days": { "type": "integer", "minimum": 1 },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mission", "allowed_tasks", "prohibited_tasks", "handoffs"],
+      "properties": {
+        "mission": { "type": "string", "minLength": 10 },
+        "allowed_tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 3 }
+        },
+        "prohibited_tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 3 }
+        },
+        "handoffs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/handoffRule" }
+        },
+        "in_scope_systems": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "out_of_scope_systems": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "data_domains": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "success_criteria": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 }
+        },
+        "confidence_thresholds": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/threshold" }
+        }
+      }
+    },
+    "handoffRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trigger", "action", "target"],
+      "properties": {
+        "trigger": { "type": "string", "minLength": 3 },
+        "action": {
+          "type": "string",
+          "enum": ["escalate-to-human", "request-human-review", "route-to-system", "halt"]
+        },
+        "target": { "type": "string", "minLength": 1 },
+        "notes": { "type": "string" }
+      }
+    },
+    "threshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "minimum"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "minimum": { "type": "number", "minimum": 0, "maximum": 1 },
+        "action_below": { "type": "string", "minLength": 1 }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permission_level", "allowed_actions", "restricted_actions", "approval_requirements"],
+      "properties": {
+        "permission_level": { "type": "string", "minLength": 1 },
+        "allowed_actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "restricted_actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "approval_requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/approvalRequirement" }
+        },
+        "system_permissions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          }
+        },
+        "external_communication_policy": { "type": "string", "minLength": 1 },
+        "max_transaction_value": { "type": "number", "minimum": 0 },
+        "delegation_rules": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "approvalRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "requirement"],
+      "properties": {
+        "action": { "type": "string", "minLength": 1 },
+        "requirement": { "type": "string", "minLength": 1 },
+        "approver_role": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "string", "minLength": 1 }
+      }
+    },
+    "escalation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_action", "contact_path", "triggers"],
+      "properties": {
+        "default_action": {
+          "type": "string",
+          "enum": ["pause-and-escalate", "halt-and-escalate", "request-human-review"]
+        },
+        "contact_path": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary"],
+          "properties": {
+            "primary": { "type": "string", "minLength": 1 },
+            "secondary": { "type": "string", "minLength": 1 }
+          }
+        },
+        "pause_on_trigger": { "type": "boolean" },
+        "severity_levels": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "response_slos": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^P(T.*|[0-9YMWD].*)$"
+          }
+        },
+        "notification_channels": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "triggers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/escalationTrigger" }
+        }
+      }
+    },
+    "escalationTrigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["condition", "action", "target"],
+      "properties": {
+        "condition": { "type": "string", "minLength": 3 },
+        "action": {
+          "type": "string",
+          "enum": ["escalate-to-human", "halt-and-request-review", "request-human-review", "route-to-approved-queue"]
+        },
+        "target": { "type": "string", "minLength": 1 },
+        "severity": { "type": "string", "minLength": 1 },
+        "notes": { "type": "string" }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "categories", "retention", "prohibited_content"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["none", "session-only", "bounded-persistent"]
+        },
+        "categories": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["default_days"],
+          "properties": {
+            "default_days": { "type": "integer", "minimum": 0 },
+            "overrides": {
+              "type": "object",
+              "additionalProperties": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "prohibited_content": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "review_required_for_write": { "type": "boolean" },
+        "reset_conditions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 }
+        },
+        "subject_access_process": { "type": "string", "minLength": 1 },
+        "encryption_class": { "type": "string", "minLength": 1 }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["limits", "exhaustion_action"],
+      "properties": {
+        "limits": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/budgetLimit" }
+        },
+        "exhaustion_action": {
+          "type": "string",
+          "enum": ["throttle", "throttle-and-escalate", "halt", "disable-until-review"]
+        },
+        "warning_thresholds": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/warningThreshold" }
+        },
+        "override_process": { "type": "string", "minLength": 1 },
+        "priority_tier": { "type": "string", "minLength": 1 },
+        "cost_center": { "type": "string", "minLength": 1 }
+      }
+    },
+    "budgetLimit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "amount", "unit", "period", "enforcement"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "amount": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": { "type": "string", "minLength": 1 },
+        "period": { "type": "string", "minLength": 1 },
+        "enforcement": { "type": "string", "enum": ["soft", "hard"] }
+      }
+    },
+    "warningThreshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["limit", "percent"],
+      "properties": {
+        "limit": { "type": "string", "minLength": 1 },
+        "percent": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objectives", "review_cycle_days", "failure_action"],
+      "properties": {
+        "objectives": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/objective" }
+        },
+        "review_cycle_days": { "type": "integer", "minimum": 1 },
+        "failure_action": { "type": "string", "minLength": 1 },
+        "measurement_sources": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "minimum_sample_size": { "type": "integer", "minimum": 1 },
+        "segmented_targets": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "human_review_rate": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "objective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "target", "window"],
+      "properties": {
+        "metric": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "window": { "type": "string", "minLength": 1 },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
