@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arp.dev/schemas/report.schema.json",
+  "title": "ARP Operational Report",
+  "description": "Schema for periodic or incident-oriented reports emitted about an ARP-defined agent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "report_id",
+    "report_type",
+    "generated_at",
+    "agent_id",
+    "protocol_version",
+    "period",
+    "summary"
+  ],
+  "properties": {
+    "kind": { "const": "ARPReport" },
+    "report_id": { "type": "string", "minLength": 1 },
+    "report_type": {
+      "type": "string",
+      "enum": ["operational", "review", "incident", "change"]
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "agent_id": { "type": "string", "minLength": 1 },
+    "protocol_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "period": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "highlights"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["ok", "warning", "action-required", "critical"]
+        },
+        "highlights": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 3 }
+        },
+        "risks": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "value"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "value": {},
+          "target": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "enum": ["met", "missed", "unknown"] }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["timestamp", "type", "summary"],
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time" },
+          "type": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string", "minLength": 3 },
+          "reference": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "recommended_actions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 3 }
+    }
+  }
+}

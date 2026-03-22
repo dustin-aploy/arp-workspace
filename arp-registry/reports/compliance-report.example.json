@@ -1,0 +1,82 @@
+{
+  "kind": "ARPComplianceReport",
+  "report_id": "certified-sample-20260320",
+  "generated_at": "2026-03-20T12:00:00Z",
+  "subject": {
+    "agent_id": "sales.pipeline.qualifier",
+    "declaration_digest": "06762f8abcd99ce292b12e5cb65fef4a65fb84e7f50e9e3cfbe33f74957f28bb",
+    "artifact_uri": "https://registry.example.org/artifacts/sales-agent.yaml"
+  },
+  "protocol_version": "0.1.0",
+  "profile": {
+    "name": "arp-reference-certification",
+    "version": "0.1.0",
+    "issuer": "arp-test-suite"
+  },
+  "summary": {
+    "status": "pass",
+    "passed": 14,
+    "failed": 0,
+    "warnings": 0,
+    "notes": [
+      "project=sample-certified-project",
+      "compatibility_level=certified",
+      "tests_run=14",
+      "tests_passed=14",
+      "tests_failed=0",
+      "test_suite_version=0.1.0"
+    ]
+  },
+  "checks": [
+    {
+      "id": "identity-required",
+      "pillar": "identity",
+      "description": "identity must be required",
+      "status": "pass",
+      "evidence": ["$.identity is required"]
+    },
+    {
+      "id": "scope-required",
+      "pillar": "scope",
+      "description": "scope must be required",
+      "status": "pass",
+      "evidence": ["$.scope is required"]
+    },
+    {
+      "id": "authority-required",
+      "pillar": "authority",
+      "description": "authority must be required",
+      "status": "pass",
+      "evidence": ["$.authority is required"]
+    },
+    {
+      "id": "memory-required",
+      "pillar": "memory",
+      "description": "memory must be required",
+      "status": "pass",
+      "evidence": ["$.memory is required"]
+    },
+    {
+      "id": "audit-fields",
+      "pillar": "audit",
+      "description": "audit events must contain required fields",
+      "status": "pass",
+      "evidence": ["event_id", "protocol_version", "outcome"]
+    },
+    {
+      "id": "report-required-fields",
+      "pillar": "performance",
+      "description": "daily report should include required fields",
+      "status": "pass",
+      "evidence": ["kind", "report_id", "summary"]
+    }
+  ],
+  "attestations": [
+    {
+      "name": "arp-test-suite",
+      "role": "suite-runner",
+      "timestamp": "2026-03-20T12:00:00Z",
+      "statement": "Generated certified compliance evidence for sample-certified-project."
+    }
+  ]
+}

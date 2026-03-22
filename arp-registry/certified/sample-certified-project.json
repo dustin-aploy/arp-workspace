@@ -1,0 +1,156 @@
+{
+  "kind": "ARPRegistryEntry",
+  "registry_version": "0.1.0",
+  "listing_id": "sample-certified-project",
+  "references": {
+    "arp_spec_version": "0.1.0",
+    "test_suite_version": "0.1.0",
+    "report_id": "certified-sample-20260320"
+  },
+  "project": {
+    "slug": "sample-certified-project",
+    "display_name": "Sample Certified ARP Project",
+    "homepage": "https://example.org/sample-certified-project",
+    "repository": "https://github.com/example/sample-certified-project",
+    "maintainers": [
+      {
+        "name": "Jordan Kim",
+        "contact": "jordan@example.org",
+        "organization": "Example Enterprise"
+      }
+    ]
+  },
+  "listing": {
+    "tier": "certified",
+    "status": "active",
+    "protocol_version": "0.1.0",
+    "test_suite": {
+      "name": "arp-test-suite",
+      "version": "0.1.0",
+      "profile": "arp-reference-certification"
+    },
+    "listed_at": "2026-03-20T12:40:00Z",
+    "last_reviewed_at": "2026-03-20T12:45:00Z",
+    "expires_at": "2026-06-18T12:45:00Z",
+    "review_notes": [
+      "Certified listing reviewed against signed public report.",
+      "Recertification required within 90 days."
+    ]
+  },
+  "declaration": {
+    "agent_id": "sales.pipeline.qualifier",
+    "artifact_uri": "https://registry.example.org/artifacts/sales-agent.yaml",
+    "declaration_digest": "06762f8abcd99ce292b12e5cb65fef4a65fb84e7f50e9e3cfbe33f74957f28bb",
+    "source_commit": "9abc1234"
+  },
+  "evidence": {
+    "compliance_report": {
+      "kind": "ARPComplianceReport",
+      "report_id": "certified-sample-20260320",
+      "generated_at": "2026-03-20T12:00:00Z",
+      "subject": {
+        "agent_id": "sales.pipeline.qualifier",
+        "declaration_digest": "06762f8abcd99ce292b12e5cb65fef4a65fb84e7f50e9e3cfbe33f74957f28bb",
+        "artifact_uri": "https://registry.example.org/artifacts/sales-agent.yaml"
+      },
+      "protocol_version": "0.1.0",
+      "profile": {
+        "name": "arp-reference-certification",
+        "version": "0.1.0",
+        "issuer": "arp-test-suite"
+      },
+      "summary": {
+        "status": "pass",
+        "passed": 14,
+        "failed": 0,
+        "warnings": 0,
+        "notes": [
+          "project=sample-certified-project",
+          "compatibility_level=certified",
+          "tests_run=14",
+          "tests_passed=14",
+          "tests_failed=0",
+          "test_suite_version=0.1.0"
+        ]
+      },
+      "checks": [
+        {
+          "id": "identity-required",
+          "pillar": "identity",
+          "description": "identity must be required",
+          "status": "pass",
+          "evidence": ["$.identity is required"]
+        },
+        {
+          "id": "scope-required",
+          "pillar": "scope",
+          "description": "scope must be required",
+          "status": "pass",
+          "evidence": ["$.scope is required"]
+        },
+        {
+          "id": "authority-required",
+          "pillar": "authority",
+          "description": "authority must be required",
+          "status": "pass",
+          "evidence": ["$.authority is required"]
+        },
+        {
+          "id": "memory-required",
+          "pillar": "memory",
+          "description": "memory must be required",
+          "status": "pass",
+          "evidence": ["$.memory is required"]
+        },
+        {
+          "id": "audit-fields",
+          "pillar": "audit",
+          "description": "audit events must contain required fields",
+          "status": "pass",
+          "evidence": ["event_id", "protocol_version", "outcome"]
+        },
+        {
+          "id": "report-required-fields",
+          "pillar": "performance",
+          "description": "daily report should include required fields",
+          "status": "pass",
+          "evidence": ["kind", "report_id", "summary"]
+        }
+      ],
+      "attestations": [
+        {
+          "name": "arp-test-suite",
+          "role": "suite-runner",
+          "timestamp": "2026-03-20T12:00:00Z",
+          "statement": "Generated certified compliance evidence for sample-certified-project."
+        }
+      ]
+    },
+    "report_artifact_uri": "https://registry.example.org/reports/compliance-report.example.json",
+    "report_signature": {
+      "artifact_uri": "https://registry.example.org/reports/compliance-report.example.sig",
+      "algorithm": "ed25519",
+      "signer": "ARP Registry Review Board",
+      "key_id": "ed25519:registry-demo-key-01",
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "verified": true
+    },
+    "transparency_log_uri": "https://transparency.example.org/entries/certified-sample-20260320",
+    "public_notes": [
+      "Certified listings require signed public evidence and an issuance record."
+    ]
+  },
+  "governance": {
+    "listed_by": "arp-registry certification board",
+    "review_policy": "certification-review-v1",
+    "appeals_uri": "https://registry.example.org/policies/appeals",
+    "issue_tracker": "https://github.com/example/sample-certified-project/issues"
+  },
+  "certification": {
+    "issued_at": "2026-03-20T12:45:00Z",
+    "issued_by": "ARP Registry Review Board",
+    "valid_until": "2026-06-18T12:45:00Z",
+    "scope": "Full ARP conformance bundle for protocol 0.1.0",
+    "certificate_id": "arp-cert-2026-0001"
+  }
+}
