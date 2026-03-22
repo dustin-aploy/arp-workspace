@@ -1,0 +1,20 @@
+[build-system]
+requires = []
+build-backend = "build_backend"
+backend-path = ["."]
+
+[project]
+name = "arp-devkit"
+version = "0.1.0"
+description = "Grouped developer toolkit workspace for the Agent Responsibility Protocol (ARP)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+keywords = ["arp", "devkit", "runtime", "testing", "examples"]
+
+[tool.arp_devkit]
+runtime_path = "runtime"
+test_suite_path = "test-suite"
+adapters_path = "adapters"
+examples_path = "examples"
+scripts_path = "scripts"

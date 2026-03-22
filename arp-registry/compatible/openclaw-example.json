@@ -1,0 +1,136 @@
+{
+  "kind": "ARPRegistryEntry",
+  "registry_version": "0.1.0",
+  "listing_id": "openclaw-compatible-example",
+  "references": {
+    "arp_spec_version": "0.1.0",
+    "test_suite_version": "0.1.0",
+    "report_id": "openclaw-compatible-20260320"
+  },
+  "project": {
+    "slug": "openclaw-example",
+    "display_name": "OpenClaw ARP Adapter Example",
+    "homepage": "https://example.org/openclaw-arp",
+    "repository": "https://github.com/example/openclaw-arp",
+    "maintainers": [
+      {
+        "name": "Dana Reyes",
+        "contact": "dana@example.org",
+        "organization": "Example Labs"
+      }
+    ]
+  },
+  "listing": {
+    "tier": "compatible",
+    "status": "active",
+    "protocol_version": "0.1.0",
+    "test_suite": {
+      "name": "arp-test-suite",
+      "version": "0.1.0",
+      "profile": "compatibility"
+    },
+    "listed_at": "2026-03-20T12:15:00Z",
+    "last_reviewed_at": "2026-03-20T12:20:00Z",
+    "expires_at": "2026-09-16T12:20:00Z",
+    "review_notes": [
+      "Compatible listing backed by public report.",
+      "No independent certification issuance attached."
+    ]
+  },
+  "declaration": {
+    "agent_id": "openclaw.support.router",
+    "artifact_uri": "https://example.org/openclaw-arp/support-router.yaml",
+    "declaration_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "source_commit": "1a2b3c4d"
+  },
+  "evidence": {
+    "compliance_report": {
+      "kind": "ARPComplianceReport",
+      "report_id": "openclaw-compatible-20260320",
+      "generated_at": "2026-03-20T12:10:00Z",
+      "subject": {
+        "agent_id": "openclaw.support.router",
+        "declaration_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "artifact_uri": "https://example.org/openclaw-arp/support-router.yaml"
+      },
+      "protocol_version": "0.1.0",
+      "profile": {
+        "name": "openclaw-compatibility",
+        "version": "0.1.0",
+        "issuer": "arp-test-suite"
+      },
+      "summary": {
+        "status": "conditional-pass",
+        "passed": 11,
+        "failed": 0,
+        "warnings": 1,
+        "notes": [
+          "project=openclaw-example",
+          "compatibility_level=compatible",
+          "tests_run=11",
+          "tests_passed=11",
+          "tests_failed=0",
+          "test_suite_version=0.1.0"
+        ]
+      },
+      "checks": [
+        {
+          "id": "identity-required",
+          "pillar": "identity",
+          "description": "identity must be required",
+          "status": "pass",
+          "evidence": ["$.identity is required"]
+        },
+        {
+          "id": "scope-required",
+          "pillar": "scope",
+          "description": "scope must be required",
+          "status": "pass",
+          "evidence": ["$.scope is required"]
+        },
+        {
+          "id": "authority-required",
+          "pillar": "authority",
+          "description": "authority must be required",
+          "status": "pass",
+          "evidence": ["$.authority is required"]
+        },
+        {
+          "id": "memory-required",
+          "pillar": "memory",
+          "description": "memory must be required",
+          "status": "warning",
+          "evidence": ["memory support verified through adapter-owned store"],
+          "remediation": "Publish a fuller memory conformance bundle for certification readiness."
+        }
+      ],
+      "attestations": [
+        {
+          "name": "arp-test-suite",
+          "role": "suite-runner",
+          "timestamp": "2026-03-20T12:10:00Z",
+          "statement": "Generated compatible compliance evidence for openclaw-example."
+        }
+      ]
+    },
+    "report_artifact_uri": "https://registry.example.org/reports/openclaw-compatible-20260320.json",
+    "report_signature": {
+      "artifact_uri": "https://registry.example.org/reports/openclaw-compatible-20260320.sig",
+      "algorithm": "ed25519",
+      "signer": "Example Labs Release Engineering",
+      "key_id": "ed25519:example-openclaw-key",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "verified": true
+    },
+    "transparency_log_uri": "https://transparency.example.org/entries/openclaw-compatible-20260320",
+    "public_notes": [
+      "The registry entry embeds the protocol-shaped report for offline verification."
+    ]
+  },
+  "governance": {
+    "listed_by": "arp-registry maintainers",
+    "review_policy": "compatible-review-v1",
+    "appeals_uri": "https://registry.example.org/policies/appeals",
+    "issue_tracker": "https://github.com/example/openclaw-arp/issues"
+  }
+}

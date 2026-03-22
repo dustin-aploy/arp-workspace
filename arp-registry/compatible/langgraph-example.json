@@ -1,0 +1,128 @@
+{
+  "kind": "ARPRegistryEntry",
+  "registry_version": "0.1.0",
+  "listing_id": "langgraph-compatible-example",
+  "references": {
+    "arp_spec_version": "0.1.0",
+    "test_suite_version": "0.1.0",
+    "report_id": "langgraph-compatible-20260320"
+  },
+  "project": {
+    "slug": "langgraph-example",
+    "display_name": "LangGraph ARP Workflow Example",
+    "homepage": "https://example.org/langgraph-arp",
+    "repository": "https://github.com/example/langgraph-arp",
+    "maintainers": [
+      {
+        "name": "Mina Patel",
+        "contact": "mina@example.org",
+        "organization": "Example Workflow Co"
+      }
+    ]
+  },
+  "listing": {
+    "tier": "compatible",
+    "status": "active",
+    "protocol_version": "0.1.0",
+    "test_suite": {
+      "name": "arp-test-suite",
+      "version": "0.1.0",
+      "profile": "compatibility"
+    },
+    "listed_at": "2026-03-20T12:30:00Z",
+    "last_reviewed_at": "2026-03-20T12:35:00Z",
+    "expires_at": "2026-09-16T12:35:00Z",
+    "review_notes": [
+      "Workflow adapter passed compatibility categories.",
+      "Certification is not claimed because no registry-issued certification record is present."
+    ]
+  },
+  "declaration": {
+    "agent_id": "langgraph.recruiting.coordinator",
+    "artifact_uri": "https://example.org/langgraph-arp/recruiting-agent.yaml",
+    "declaration_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_commit": "5d6e7f8a"
+  },
+  "evidence": {
+    "compliance_report": {
+      "kind": "ARPComplianceReport",
+      "report_id": "langgraph-compatible-20260320",
+      "generated_at": "2026-03-20T12:28:00Z",
+      "subject": {
+        "agent_id": "langgraph.recruiting.coordinator",
+        "declaration_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "artifact_uri": "https://example.org/langgraph-arp/recruiting-agent.yaml"
+      },
+      "protocol_version": "0.1.0",
+      "profile": {
+        "name": "langgraph-compatibility",
+        "version": "0.1.0",
+        "issuer": "arp-test-suite"
+      },
+      "summary": {
+        "status": "conditional-pass",
+        "passed": 12,
+        "failed": 0,
+        "warnings": 0,
+        "notes": [
+          "project=langgraph-example",
+          "compatibility_level=compatible",
+          "tests_run=12",
+          "tests_passed=12",
+          "tests_failed=0",
+          "test_suite_version=0.1.0"
+        ]
+      },
+      "checks": [
+        {
+          "id": "identity-required",
+          "pillar": "identity",
+          "description": "identity must be required",
+          "status": "pass",
+          "evidence": ["$.identity is required"]
+        },
+        {
+          "id": "approval-required",
+          "pillar": "authority",
+          "description": "approval-required actions should escalate or block",
+          "status": "pass",
+          "evidence": ["authority requires approval before action can proceed"]
+        },
+        {
+          "id": "audit-on-escalation",
+          "pillar": "audit",
+          "description": "escalated decisions must be audited",
+          "status": "pass",
+          "evidence": ["escalated"]
+        }
+      ],
+      "attestations": [
+        {
+          "name": "arp-test-suite",
+          "role": "suite-runner",
+          "timestamp": "2026-03-20T12:28:00Z",
+          "statement": "Generated compatible compliance evidence for langgraph-example."
+        }
+      ]
+    },
+    "report_artifact_uri": "https://registry.example.org/reports/langgraph-compatible-20260320.json",
+    "report_signature": {
+      "artifact_uri": "https://registry.example.org/reports/langgraph-compatible-20260320.sig",
+      "algorithm": "ed25519",
+      "signer": "Example Workflow Co Release Team",
+      "key_id": "ed25519:example-langgraph-key",
+      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "verified": true
+    },
+    "transparency_log_uri": "https://transparency.example.org/entries/langgraph-compatible-20260320",
+    "public_notes": [
+      "The listing reuses the same compliance-report concepts defined by arp-test-suite."
+    ]
+  },
+  "governance": {
+    "listed_by": "arp-registry maintainers",
+    "review_policy": "compatible-review-v1",
+    "appeals_uri": "https://registry.example.org/policies/appeals",
+    "issue_tracker": "https://github.com/example/langgraph-arp/issues"
+  }
+}

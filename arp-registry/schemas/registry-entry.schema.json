@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arp.dev/schemas/registry-entry.schema.json",
+  "title": "ARP Registry Entry",
+  "description": "Public listing metadata for an ARP project, including protocol-aligned compliance evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "registry_version",
+    "listing_id",
+    "references",
+    "project",
+    "listing",
+    "declaration",
+    "evidence",
+    "governance"
+  ],
+  "properties": {
+    "kind": { "const": "ARPRegistryEntry" },
+    "registry_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "listing_id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "references": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arp_spec_version", "test_suite_version", "report_id"],
+      "properties": {
+        "arp_spec_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "test_suite_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "report_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slug", "display_name", "homepage", "repository", "maintainers"],
+      "properties": {
+        "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "display_name": { "type": "string", "minLength": 3 },
+        "homepage": { "type": "string", "format": "uri" },
+        "repository": { "type": "string", "format": "uri" },
+        "maintainers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "contact"],
+            "properties": {
+              "name": { "type": "string", "minLength": 2 },
+              "contact": { "type": "string", "format": "email" },
+              "organization": { "type": "string", "minLength": 2 }
+            }
+          }
+        }
+      }
+    },
+    "listing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tier", "status", "protocol_version", "test_suite", "listed_at"],
+      "properties": {
+        "tier": { "type": "string", "enum": ["self-tested", "compatible", "certified"] },
+        "status": { "type": "string", "enum": ["active", "suspended", "retired", "expired"] },
+        "protocol_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "test_suite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+            "profile": { "type": "string", "minLength": 1 }
+          }
+        },
+        "listed_at": { "type": "string", "format": "date-time" },
+        "last_reviewed_at": { "type": "string", "format": "date-time" },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "review_notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent_id", "artifact_uri", "declaration_digest"],
+      "properties": {
+        "agent_id": { "type": "string", "minLength": 1 },
+        "artifact_uri": { "type": "string", "format": "uri" },
+        "declaration_digest": { "type": "string", "pattern": "^[A-Fa-f0-9]{32,128}$" },
+        "source_commit": { "type": "string", "pattern": "^[A-Fa-f0-9]{7,64}$" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["compliance_report", "report_artifact_uri", "report_signature"],
+      "properties": {
+        "compliance_report": {
+          "$ref": "../../arp-spec/schemas/compliance-report.schema.json"
+        },
+        "report_artifact_uri": { "type": "string", "format": "uri" },
+        "report_signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifact_uri", "algorithm", "signer", "digest", "verified"],
+          "properties": {
+            "artifact_uri": { "type": "string", "format": "uri" },
+            "algorithm": { "type": "string", "minLength": 3 },
+            "signer": { "type": "string", "minLength": 3 },
+            "key_id": { "type": "string", "minLength": 3 },
+            "digest": { "type": "string", "pattern": "^sha256:[A-Fa-f0-9]{64}$" },
+            "verified": { "type": "boolean" }
+          }
+        },
+        "transparency_log_uri": { "type": "string", "format": "uri" },
+        "public_notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["listed_by", "review_policy", "appeals_uri"],
+      "properties": {
+        "listed_by": { "type": "string", "minLength": 3 },
+        "review_policy": { "type": "string", "minLength": 3 },
+        "appeals_uri": { "type": "string", "format": "uri" },
+        "issue_tracker": { "type": "string", "format": "uri" }
+      }
+    },
+    "certification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issued_at", "issued_by", "valid_until", "scope"],
+      "properties": {
+        "issued_at": { "type": "string", "format": "date-time" },
+        "issued_by": { "type": "string", "minLength": 3 },
+        "valid_until": { "type": "string", "format": "date-time" },
+        "scope": { "type": "string", "minLength": 3 },
+        "certificate_id": { "type": "string", "minLength": 3 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "listing": {
+            "properties": {
+              "tier": { "const": "certified" }
+            },
+            "required": ["tier"]
+          }
+        }
+      },
+      "then": {
+        "required": ["certification"]
+      }
+    }
+  ]
+}
